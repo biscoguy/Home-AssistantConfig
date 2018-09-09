@@ -1,0 +1,472 @@
+
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: 38.897573
+  longitude: -77.361514
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 103
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/New_York
+###
+
+# Show links to resources in log and frontend
+#introduction:
+  customize: !include customize.yaml
+    
+  #customize_glob:
+  #  light.*:
+  #    custom_ui_state_card: state-card-custom-ui
+  #  cover.*:
+  #    custom_ui_state_card: state-card-custom-ui
+
+# Enables the frontend
+frontend:
+#  extra_html_url:
+ #   - /local/custom_ui/state-card-custom-ui.html
+
+# Enables configuration UI
+config:
+
+##  Sends report to devs about which components are in use locally to help development of homeassistant
+updater:
+  include_used_components: true
+
+http:
+    # Uncomment this to add a password (recommended!)
+  api_password: 3102
+  server_port: 8123
+  #ssl_certificate: /home/dehydrated/certs/goforhomeassistant.duckdns.org/fullchain.pem
+ # ssl_key: /home/dehydrated/certs/goforhomeassistant.duckdns.org/privkey.pem
+  # Uncomment this if you are using SSL or running in Docker etc
+  # base_url: example.duckdns.org:8123
+  #base_url: goforhomeassistant.duckdns.org:8123
+
+
+
+# Discover some devices automatically
+#discovery:
+ # ignore: plex_mediaserver
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+
+# Text to speech
+tts:
+  platform: google
+
+group: !include groups.yaml
+
+zeroconf:
+
+ffmpeg:
+  ffmpeg_bin: ffmpeg
+#########################
+#                       #
+#         LIGHTS        #
+#                       #
+#########################
+
+light:
+  - platform: aurora
+    host: 192.168.1.206
+    api_key: lc1tBCLyBO1wmcaw793kWduJYTyVqkXb
+    name: Triforcicle
+
+
+#########################
+#                       #
+#       Cameras         #
+#                       #
+#########################
+
+
+camera:
+  - platform: ffmpeg
+    input: rtsp://admin:jdc123@192.168.1.170:554/cam/realmonitor?channel=5&subtype=0
+    name: Driveway_Street
+  - platform: ffmpeg
+    input: rtsp://192.168.1.18:554/H264?ch=1&subtype=1
+    name: Rear Garage and Deck
+    extra_arguments: -q:v 2
+  - platform: ffmpeg
+    input: rtsp://192.168.1.18:554/H264?ch=2&subtype=1
+    name: Back Patio
+    extra_arguments: -q:v 2
+ # - platform: ffmpeg
+ #   input: rtsp://192.168.1.162/videoMain
+ #   name: Bedroom
+ #  extra_arguments: -q:v 2
+  - platform: foscam
+    ip: 192.168.1.165
+    name: FoscamPTZ_1
+    username: biscoguy
+    password: jdc123
+    extra_arguments: -q:v 2
+  - platform: ffmpeg
+    input: rtsp://admin:jdc123@192.168.1.170:554/cam/realmonitor?channel=4&subtype=0
+    name: FrontYard_1_Yard
+  - platform: ffmpeg
+    input: rtsp://admin:jdc123@192.168.1.170:554/cam/realmonitor?channel=2&subtype=0
+    name: Frontyard_3_Street
+  - platform: ffmpeg
+    input: rtsp://admin:jdc123@192.168.1.170:554/cam/realmonitor?channel=3&subtype=0
+    name: Driveway_Close
+  - platform: mjpeg
+    mjpeg_url: https://192.168.1.161:4242
+    still_image_url: http://192.168.1.161:4242/image/jpeg.cgi
+    username: biscoguy
+    password: jdc123
+    name: GarageCam
+  - platform: ffmpeg
+    input: rtsp://admin:jdc132@192.168.1.170:554/cam/realmonitor?channel=1&subtype=0
+    name: FrontYard_2_Walkway
+  #- platform: mjpeg
+  #  mjpeg_url: http://192.168.1.164/videoMain
+  #  still_image_url: http://192.168.1.164:4242/image/jpeg.cgi
+  #  username: biscoguy
+  #  password: jdc123
+  #  name: JohnsBedroom
+  - platform: ffmpeg
+    input: rtsp://biscoguy:jdc123@192.168.1.166/11
+    name: Driveway_Outwards
+  #- platform: mjpeg
+   # input: rtsp://biscoguy:jdc123@192.168.1.166/11
+    #still_image_url: http://biscoguy:jdc123@192.168.1.166/tmpfs/auto.jpg
+    #username: biscoguy
+    #password: jdc123
+    #name: Driveway_Outward
+###000000000000000000000000000000000###
+#                                     #
+#      >>> FOSCAM PTZ CONTROLS <<<    #
+#                                     #
+###000000000000000000000000000000000###
+
+#switch:
+# platform: command_line
+# switches:
+#   #Switch for Foscam Motion Detection
+#   foscam_motion:
+#     command_on: 'curl -k "https://192.168.1.165:443/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=1&usr=biscoguy&pwd=jdc123"'
+#     command_off: 'curl -k "https://192.168.1.165:443/cgi-bin/CGIProxy.fcgi?cmd=setMotionDetectConfig&isEnable=0&usr=biscoguy&pwd=jdc123"'
+#     command_state: 'curl -k --silent "https://192.168.1.165:443/cgi-bin/CGIProxy.fcgi?cmd=getMotionDetectConfig&usr=biscoguy&pwd=jdc123" | grep -oP "(?<=isEnable>).*?(?=</isEnable>)"'
+#     value_template: '{{ value == "1" }}'
+#
+#shell_command:
+##  #Created a preset point in Foscam Web Interface named Off which essentially points the camera down and away
+##  foscam_turn_off: 'curl -k "https://192.168.1.165:443/cgi-bin/CGIProxy.fcgi?cmd=ptzGotoPresetPoint&name=off&usr=biscoguy&pwd=jdc123"'
+##  #Created a preset point in Foscam Web Interface named Main which points in the direction I would like to record
+##  foscam_turn_on: 'curl -k "https://192.168.1.165:443/cgi-bin/CGIProxy.fcgi?cmd=ptzGotoPresetPoint&name=kitchen&usr=biscoguy&pwd=jdc123"'
+##
+##script:
+## foscam_off:
+##   sequence:
+##   - service: switch.turn_off
+#     data:
+##       entity_id: switch.foscam_motion
+#   - service: shell_command.foscam_turn_off
+# foscam_on:
+#   sequence:
+#   - service: switch.turn_off
+#     data:
+#       entity_id: switch.foscam_motion
+#   - service: shell_command.foscam_turn_on
+#   - service: switch.turn_on
+#     data:
+#       entity_id: switch.foscam_motion
+
+#####################
+#   Custom Panels   #
+#                   #
+#  METRO LIVE MAP   #
+#         &         #
+#  Volumio Control  #
+#                   #
+#####################
+
+panel_iframe:
+  metro:
+    title: METRO Live Map
+    url: https://gis.wmata.com/metrotrain/index.html
+    icon: mdi:train 
+  volumiofrontend:
+    title: Volumio Controller
+    url: http://192.168.1.154
+    icon: mdi:radio
+  terminal:
+    title: 'Terminal'
+    icon: mdi:console
+    url: 'http://192.168.1.160:4200'
+#panel_custom:
+#  - name: react
+#    sidebar_title: Reactor Panel
+#    sidebar_icon: mdi:checkbox-marked-outline
+#    config:
+#      title: Wow hello!
+
+#########################
+#                       #
+#    Notifications      #
+#                       #
+#########################
+
+
+
+#########################
+#                       #
+#     Garage Doors      #
+#                       #
+#########################
+
+cover:
+  - platform: myq
+    username: !secret myqusername
+    password: !secret myqpassword
+    type: chamberlain
+
+#########################
+#                       #
+#         Wink          #
+#                       #
+#########################
+
+wink:
+  email: !secret wink_email
+  password: !secret wink_password
+  client_id: DjvmOMPArGNJg2faivq8tkn19F8BYWJ4
+  client_secret: qPUHyIyP8ep-1AXEDiQdREyCRnhcvtJ5
+
+#########################
+#                       #
+#     Harmony Hub       #
+#                       #
+#########################
+
+remote:
+  - platform: harmony
+    name: BasementHarmonyHub
+    host: 192.168.1.121
+
+##########################
+#                        #
+#       Sensors          #
+#                        #
+##########################
+
+## - platform: template
+ #   sensors:
+ #     is_john_home:
+ #       friendly_name: John Presence
+ #       entity_id:
+ #         - binary_sensor.is_john_home
+ #       value_template: >-
+    #      {%- if is_state("device_tracker.samsungsmg955u", "home")
+    #      or is_state("device_tracker.9889194559584a3836", "home")
+    #        -%}
+    #        True
+    #      {%- else -%}
+    #      False
+    #      {%- endif %}
+       # icon_template: >-
+        #{%- if is_state("binary_sensor.is_john_home", "home") -%}mdi:home{%- else -%}mdi:home-outline{%- endif %}
+        
+# Weather Prediction
+sensor:
+  - platform: yr
+  - platform: imap_email_content
+    server: imap-mail.outlook.com
+    port: 993
+    username: biscoguy@hotmail.com
+    password: B0tt1edCOKE
+    senders: 
+      - johnd.church@outlook.com
+  - platform: template
+    sensors:
+      is_john_home:
+        value_template: >-
+          {%- if is_state("device_tracker.samsungsmg955u", "home")
+          or is_state("device_tracker.9889194559584a3836", "home")
+            -%}
+            Home
+          {%- else -%}
+          Not Home
+          {%- endif %}
+
+
+##########################
+#                        #
+#       Sensors          #
+#                        #
+##########################
+
+ios: 
+
+##########################
+#                        #
+#     Notifications      #
+#                        # 
+##########################
+
+notify:
+  - name: johns_notifymyandroid
+    platform: nma
+    api_key: 2f04fe420e2e9230dbe67cc24a8717a6adcf05a87c71201a
+
+    #################################
+    #                               #
+    #         Automations           #
+    #                               #
+    #################################
+
+automation: !include automations.yaml
+
+######################################
+#                                    #
+#          Image Processing          #
+#                                    #
+######################################
+
+##image_processing:
+ # - platform: openalpr_cloud
+ #   api_key: 'sk_d05a1757f3000916d2e098e2'
+ #   region: us
+ #   source:
+ #     - entity_id: camera.driveway_entrance
+ # - platform: openalpr_local
+ #   region: us
+ #   source:
+ #     - entity_id: camera.driveway_entrance#
+
+
+
+ #####################################
+ #                                   #
+ #            Media Player           #
+ #                                   #
+ #####################################
+
+media_player:
+ # - platform: spotify
+  #  client_id: 615e50e82d1f43ce8b5fd64348b8c6a2
+   # client_secret: f118c6f986ab46babddba5d249c22590
+    #aliases:
+  - platform: cast
+  - platform: volumio
+    host: 192.168.1.154
+    port: 3000   
+  - platform: universal
+    name: Test Universal Media Player
+    children:
+      - media_player.volumio 
+    commands:
+      turn_on:
+        service: remote.send_command
+        data:
+          entity_id: remote.basementharmonyhub
+          device: 43958047
+          command: PowerOn 
+      turn_off:
+        service: remote.send_command
+        data:
+          entity_id: remote.basementharmonyhub
+          device: 43958047
+          command: PowerOff
+      volume_up:
+        service: remote.send_command
+        data:
+          entity_id: remote.basementharmonyhub
+          device: 43958047
+          command: VolumeUp 
+      volume_down:
+        service: remote.send_command
+        data:
+          entity_id: remote.basementharmonyhub
+          device: 43958047
+          command: VolumeDown 
+      mute:
+        service: remote.send_command
+        data:
+          entity_id: remote.basementharmonyhub
+          device: 43958047
+          command: Mute
+  - platform: plex
+    entity_namespace: 'plex'
+    include_non_clients: true
+    scan_interval: 5
+    show_all_controls: true
+    use_custom_entity_ids: true
+    use_episode_art: true  
+
+##################################
+#                                #
+#         Input Buttons          #
+#                                #
+##################################
+
+#input_select:
+#  which_receiver:
+#    name: Audio Receivers
+#    options:
+#     - Living Room Main
+#     - Patio 
+#     - Soundbar Bedroom
+#    initial: Living Room Main
+#    icon: mdi:volume
+#  which_tv:
+#    options:
+#      - Living Room
+#      - Bedroom
+#  input_boolean:
+#    john_home:
+#      name: John is home alert
+#      initial: off 
+      
+############################
+#                          #
+#         Presence         #
+#         Detection        #
+#             &            #
+#           Device         #
+#           Tracker        #
+#                          #
+############################
+
+
+device_tracker:
+  - platform: asuswrt
+    host: 192.168.1.5
+    username: biscoguy
+    protocol: telnet
+    password: jdc123
+    track_new_devices: no
+    #ssh_key: /home/homeassistant/.homeassistant/keys/asuswrtopenssh
+  #  password: jdc123
+ # - platform: icloud
+  #  username: glenys.church6@verizon.net
+   # password: Nitt4agm2c2taotc
+    #account_name: Mom
+  - platform: gpslogger
+ # - platform: icloud
+  #  username: iamaroadgeek@gmail.com 
+   # password: JDChurch87
+    #account_name: Jordan's iCloud
+
+
+
+# # custom_ui: local
+  #hide_attributes:
+  #  - node_id
+  #  - value_index
