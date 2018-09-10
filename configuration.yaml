@@ -1,4 +1,4 @@
-
+username
 homeassistant:
   # Name of the location where Home Assistant is running
   name: Home
@@ -112,8 +112,8 @@ camera:
   - platform: foscam
     ip: 192.168.1.165
     name: FoscamPTZ_1
-    username: biscoguy
-    password: jdc123
+    username: !secret username
+    password: !secret password
     extra_arguments: -q:v 2
   - platform: ffmpeg
     input: rtsp://admin:jdc123@192.168.1.170:554/cam/realmonitor?channel=4&subtype=0
@@ -127,8 +127,8 @@ camera:
   - platform: mjpeg
     mjpeg_url: https://192.168.1.161:4242
     still_image_url: http://192.168.1.161:4242/image/jpeg.cgi
-    username: biscoguy
-    password: jdc123
+    username: !secret username
+    password: !secret password
     name: GarageCam
   - platform: ffmpeg
     input: rtsp://admin:jdc132@192.168.1.170:554/cam/realmonitor?channel=1&subtype=0
@@ -136,8 +136,8 @@ camera:
   #- platform: mjpeg
   #  mjpeg_url: http://192.168.1.164/videoMain
   #  still_image_url: http://192.168.1.164:4242/image/jpeg.cgi
-  #  username: biscoguy
-  #  password: jdc123
+  #  username: !secret username
+  #  password: !secret password
   #  name: JohnsBedroom
   - platform: ffmpeg
     input: rtsp://biscoguy:jdc123@192.168.1.166/11
@@ -145,8 +145,8 @@ camera:
   #- platform: mjpeg
    # input: rtsp://biscoguy:jdc123@192.168.1.166/11
     #still_image_url: http://biscoguy:jdc123@192.168.1.166/tmpfs/auto.jpg
-    #username: biscoguy
-    #password: jdc123
+    #username: !secret username
+    #password: !secret password
     #name: Driveway_Outward
 ###000000000000000000000000000000000###
 #                                     #
@@ -208,7 +208,7 @@ panel_iframe:
   terminal:
     title: 'Terminal'
     icon: mdi:console
-    url: 'http://192.168.1.150:4200'
+    url: !secret terminal_ipport
 #panel_custom:
 #  - name: react
 #    sidebar_title: Reactor Panel
@@ -257,7 +257,7 @@ wink:
 remote:
   - platform: harmony
     name: BasementHarmonyHub
-    host: 192.168.1.27
+    host: !secret harmony_ip
 
 ##########################
 #                        #
@@ -288,10 +288,10 @@ sensor:
   - platform: imap_email_content
     server: imap-mail.outlook.com
     port: 993
-    username: biscoguy@hotmail.com
-    password: B0tt1edCOKE
+    username: !secret outlook_user
+    password: !secret outlook_pass
     senders:
-      - johnd.church@outlook.com
+      - !secret johndchurchatoutlook
   - platform: template
     sensors:
       is_john_home:
@@ -322,7 +322,7 @@ ios:
 notify:
   - name: johns_notifymyandroid
     platform: nma
-    api_key: 2f04fe420e2e9230dbe67cc24a8717a6adcf05a87c71201a
+    api_key: !secret notifymyandroid_apikey
 
     #################################
     #                               #
@@ -363,9 +363,6 @@ media_player:
    # client_secret: f118c6f986ab46babddba5d249c22590
     #aliases:
   - platform: cast
-  - platform: volumio
-    host: 192.168.1.154
-    port: 3000
   - platform: universal
     name: Test Universal Media Player
     children:
@@ -409,7 +406,7 @@ media_player:
     use_custom_entity_ids: true
     use_episode_art: true
   - platform: snapcast
-    host: 192.168.1.150
+    host: !secret snapcast_ip
 
 ##################################
 #                                #
@@ -448,18 +445,23 @@ media_player:
 
 device_tracker:
   - platform: asuswrt
-    host: 192.168.1.5
-    username: biscoguy
+    host: !secret asus_ip
+    username: !secret router_user
+    password:  !secret router_pass
     protocol: telnet
-    password: jdc123
     track_new_devices: no
     #ssh_key: /home/homeassistant/.homeassistant/keys/asuswrtopenssh
-  #  password: jdc123
+  #  password: !secret password
  # - platform: icloud
   #  username: glenys.church6@verizon.net
    # password: Nitt4agm2c2taotc
     #account_name: Mom
   - platform: gpslogger
+  - platform: tomato
+    host: !secret tomato_ip
+    username: !secret router_user
+    password:  !secret router_pass
+    http_id: !secret tomato_http_id
  # - platform: icloud
   #  username: iamaroadgeek@gmail.com
    # password: JDChurch87
