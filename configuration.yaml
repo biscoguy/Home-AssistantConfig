@@ -16,7 +16,7 @@ homeassistant:
 # Show links to resources in log and frontend
 #introduction:
   customize: !include customize.yaml
-    
+
   #customize_glob:
   #  light.*:
   #    custom_ui_state_card: state-card-custom-ui
@@ -37,7 +37,6 @@ updater:
 
 http:
     # Uncomment this to add a password (recommended!)
-  api_password: 3102
   server_port: 8123
   #ssl_certificate: /home/dehydrated/certs/goforhomeassistant.duckdns.org/fullchain.pem
  # ssl_key: /home/dehydrated/certs/goforhomeassistant.duckdns.org/privkey.pem
@@ -82,7 +81,7 @@ ffmpeg:
 
 light:
   - platform: aurora
-    host: 192.168.1.206
+    host: 192.168.1.153
     api_key: lc1tBCLyBO1wmcaw793kWduJYTyVqkXb
     name: Triforcicle
 
@@ -201,7 +200,7 @@ panel_iframe:
   metro:
     title: METRO Live Map
     url: https://gis.wmata.com/metrotrain/index.html
-    icon: mdi:train 
+    icon: mdi:train
   volumiofrontend:
     title: Volumio Controller
     url: http://192.168.1.154
@@ -246,8 +245,8 @@ cover:
 wink:
   email: !secret wink_email
   password: !secret wink_password
-  client_id: DjvmOMPArGNJg2faivq8tkn19F8BYWJ4
-  client_secret: qPUHyIyP8ep-1AXEDiQdREyCRnhcvtJ5
+  client_id: !secret wink_client_id
+  client_secret: !secret wink_client_secret
 
 #########################
 #                       #
@@ -258,7 +257,7 @@ wink:
 remote:
   - platform: harmony
     name: BasementHarmonyHub
-    host: 192.168.1.121
+    host: 192.168.1.27
 
 ##########################
 #                        #
@@ -282,7 +281,7 @@ remote:
     #      {%- endif %}
        # icon_template: >-
         #{%- if is_state("binary_sensor.is_john_home", "home") -%}mdi:home{%- else -%}mdi:home-outline{%- endif %}
-        
+
 # Weather Prediction
 sensor:
   - platform: yr
@@ -291,7 +290,7 @@ sensor:
     port: 993
     username: biscoguy@hotmail.com
     password: B0tt1edCOKE
-    senders: 
+    senders:
       - johnd.church@outlook.com
   - platform: template
     sensors:
@@ -312,12 +311,12 @@ sensor:
 #                        #
 ##########################
 
-ios: 
+ios:
 
 ##########################
 #                        #
 #     Notifications      #
-#                        # 
+#                        #
 ##########################
 
 notify:
@@ -366,18 +365,18 @@ media_player:
   - platform: cast
   - platform: volumio
     host: 192.168.1.154
-    port: 3000   
+    port: 3000
   - platform: universal
     name: Test Universal Media Player
     children:
-      - media_player.volumio 
+      - media_player.volumio
     commands:
       turn_on:
         service: remote.send_command
         data:
           entity_id: remote.basementharmonyhub
           device: 43958047
-          command: PowerOn 
+          command: PowerOn
       turn_off:
         service: remote.send_command
         data:
@@ -389,13 +388,13 @@ media_player:
         data:
           entity_id: remote.basementharmonyhub
           device: 43958047
-          command: VolumeUp 
+          command: VolumeUp
       volume_down:
         service: remote.send_command
         data:
           entity_id: remote.basementharmonyhub
           device: 43958047
-          command: VolumeDown 
+          command: VolumeDown
       mute:
         service: remote.send_command
         data:
@@ -408,7 +407,9 @@ media_player:
     scan_interval: 5
     show_all_controls: true
     use_custom_entity_ids: true
-    use_episode_art: true  
+    use_episode_art: true
+  - platform: snapcast
+    host: 192.168.1.150
 
 ##################################
 #                                #
@@ -421,7 +422,7 @@ media_player:
 #    name: Audio Receivers
 #    options:
 #     - Living Room Main
-#     - Patio 
+#     - Patio
 #     - Soundbar Bedroom
 #    initial: Living Room Main
 #    icon: mdi:volume
@@ -432,8 +433,8 @@ media_player:
 #  input_boolean:
 #    john_home:
 #      name: John is home alert
-#      initial: off 
-      
+#      initial: off
+
 ############################
 #                          #
 #         Presence         #
@@ -460,7 +461,7 @@ device_tracker:
     #account_name: Mom
   - platform: gpslogger
  # - platform: icloud
-  #  username: iamaroadgeek@gmail.com 
+  #  username: iamaroadgeek@gmail.com
    # password: JDChurch87
     #account_name: Jordan's iCloud
 
