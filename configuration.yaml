@@ -201,14 +201,14 @@ panel_iframe:
     title: METRO Live Map
     url: https://gis.wmata.com/metrotrain/index.html
     icon: mdi:train
-  volumiofrontend:
-    title: Volumio Controller
-    url: http://192.168.1.154
-    icon: mdi:radio
+#  volumiofrontend:
+#    title: Volumio Controller
+#    url: http://192.168.1.154
+#    icon: mdi:radio
   terminal:
     title: 'Terminal'
     icon: mdi:console
-    url: 'http://192.168.1.160:4200'
+    url: 'http://192.168.1.150:4200'
 #panel_custom:
 #  - name: react
 #    sidebar_title: Reactor Panel
@@ -243,10 +243,10 @@ cover:
 #########################
 
 wink:
-  email: !secret wink_email
-  password: !secret wink_password
-  client_id: !secret wink_client_id
-  client_secret: !secret wink_client_secret
+#  email: !secret wink_email
+#  password: !secret wink_password
+#  client_id: !secret wink_client_id
+#  client_secret: !secret wink_client_secret
 
 #########################
 #                       #
