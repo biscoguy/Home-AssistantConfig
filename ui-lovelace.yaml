@@ -10,7 +10,7 @@ resources:
 background: center / cover no-repeat url("/background.png") fixed
 # Exclude entities from "Unused entities" view
 excluded_entities:
- 
+
 views:
     # View tab title.
   - title: Example
@@ -43,10 +43,21 @@ views:
     # Title of the view. Will be used as the tooltip for tab icon
     title: Second view
     cards:
+      - type: entities
+        entities:
+        - entity: light.bbr
+          name: Bedroom
+        - entity: light.blr
+          name: Living Room
+        - type: divider
+        - entity: light.b
+          name: Basement
+        - entity: light.k
+          name: Kitchen
         # Entities card will take a list of entities and show their state.
       - type: entities
         # Title of the entities card
-        title: Example
+        title: Lighting
         # The entities here will be shown in the same order as specified.
         # Each entry is an entity ID or a map with extra options.
         entities:
@@ -61,3 +72,16 @@ views:
         title: Lovelace
         content: >
           Welcome to your **Lovelace UI**.
+
+  - icon: mdi:train
+    title: Metro Map
+    cards:
+      - type: iframe
+        url:  http://gis.wmata.com/metrotrain/index.html
+        aspect_ratio: 100%
+  - icon: mdi:music-box-outline
+    title: Metro Map
+    cards:
+      - type: iframe
+        url:  http://192.168.1.150:6680/iris
+        aspect_ratio: 100%

@@ -35,6 +35,10 @@ updater:
   include_used_components: true
 
 http:
+  api_password: !secret api_password
+  ssl_certificate:  /etc/letsencrypt/live/goforhomeassistant.net/fullchain.pem
+  ssl_key: /etc/letsencrypt/live/goforhomeassistant.net/privkey.pem
+  base_url: goforhomeassistant.net
     # Uncomment this to add a password (recommended!)
   server_port: 8123
   #ssl_certificate: /home/dehydrated/certs/goforhomeassistant.duckdns.org/fullchain.pem
@@ -79,10 +83,48 @@ ffmpeg:
 #########################
 
 light:
-  - platform: aurora
-    host: 192.168.1.153
-    api_key: lc1tBCLyBO1wmcaw793kWduJYTyVqkXb
-    name: Triforcicle
+#  - platform: aurora
+#    host: 192.168.1.153
+#    api_key: lc1tBCLyBO1wmcaw793kWduJYTyVqkXb
+#    name: Triforcicle
+  - platform: group
+    name: blr
+    entities:
+      - light.blr_bloom_1
+      - light.blr_lightstrip_1
+      - light.blr_lightstrip_2
+      - light.blr_overhead_1
+      - light.blr_overhead_2
+      - light.blr_overhead_3
+      - light.blr_overhead_4
+      - light.BLR_TallRiceLamp_1
+      - light.BLR_TallRiceLamp_2
+      - light.bbr_iris
+      - light.bedroom_johnsdesk
+  - platform: group
+    name: bbr
+    entities:
+      - light.bedroom_shortlamp
+      - light.gooball_tripod
+      - light.homemade_globe
+      - light.johns_bedside
+  - platform: group
+    name: b
+    entities:
+      - light.billiards1
+      - light.billiards2
+      - light.billiards3
+      - light.billiards4
+      - light.billiards5
+      - light.billiards_outrun
+      - light.billiards_spacegun
+      - light.bar4
+      - light.bar3
+      - light.bar2
+      - light.bar1
+      - light.bar_counterlightstrip
+      - light.entryway2
+      - light.entryway1
 
 
 #########################
@@ -195,19 +237,15 @@ camera:
 #                   #
 #####################
 
-panel_iframe:
-  metro:
-    title: METRO Live Map
-    url: https://gis.wmata.com/metrotrain/index.html
-    icon: mdi:train
-#  volumiofrontend:
-#    title: Volumio Controller
-#    url: http://192.168.1.154
-#    icon: mdi:radio
-  terminal:
-    title: 'Terminal'
-    icon: mdi:console
-    url: !secret terminal_ipport
+#panel_iframe:
+#  metro:
+#    title: 'METRO Live Map'
+#    url: http://gis.wmata.com/metrotrain/index.html
+#    icon: mdi:train
+#  terminal:
+#    title: 'Terminal'
+#    url: !secret terminal_ipport
+#    icon: mdi:console
 #panel_custom:
 #  - name: react
 #    sidebar_title: Reactor Panel
@@ -221,7 +259,37 @@ panel_iframe:
 #                       #
 #########################
 
+######
+###### SMTP
+######
 
+notify:
+  - name: isgarageopen
+    platform: smtp
+    sender: !secret notifygmailuser
+    recipient:
+      - johnd.church@outlook.com
+      - glenys.church6@verizon.net
+    server: smtp.gmail.com
+    port: 587
+    username: !secret notifygmailuser
+    password: !secret notifygmailpass
+    encryption: starttls
+    sender_name: Your Garage Door's Open
+
+#########################
+#                       #
+#       TIMERS          #
+#                       #
+#########################
+
+timer:
+  glenys:
+    duration: '00:15:00'
+  dougs:
+    duration: '00:15:00'
+  main:
+    duration: '00:15:00'
 
 #########################
 #                       #
@@ -279,29 +347,29 @@ remote:
     #      False
     #      {%- endif %}
        # icon_template: >-
-        #{%- if is_state("binary_sensor.is_john_home", "home") -%}mdi:home{%- else -%}mdi:home-outline{%- endif %}
+        # {%- if is_state("binary_sensor.is_john_home", "home") -%}mdi:home{%- else -%}mdi:home-outline{%- endif %}
 
 # Weather Prediction
 sensor:
   - platform: yr
-  - platform: imap_email_content
-    server: imap-mail.outlook.com
-    port: 993
-    username: !secret outlook_user
-    password: !secret outlook_pass
-    senders:
-      - !secret johndchurchatoutlook
-  - platform: template
-    sensors:
-      is_john_home:
-        value_template: >-
-          {%- if is_state("device_tracker.samsungsmg955u", "home")
-          or is_state("device_tracker.9889194559584a3836", "home")
-            -%}
-            Home
-          {%- else -%}
-          Not Home
-          {%- endif %}
+#  - platform: imap_email_content
+#    server: imap-mail.outlook.com
+#    port: 993
+#    username: !secret outlook_user
+#    password: !secret outlook_pass
+#    senders:
+#      - !secret johndchurchatoutlook
+#  - platform: template
+#    sensors:
+#      is_john_home:
+#        value_template: >-
+#          {%- if is_state("device_tracker.samsungsmg955u", "home")
+#          or is_state("device_tracker.9889194559584a3836", "home")
+#            -%}
+#            Home
+#          {%- else -%}
+#          Not Home
+#          {%- endif %}
 
 
 ##########################
@@ -310,7 +378,7 @@ sensor:
 #                        #
 ##########################
 
-ios:
+#ios:
 
 ##########################
 #                        #
@@ -318,10 +386,10 @@ ios:
 #                        #
 ##########################
 
-notify:
-  - name: johns_notifymyandroid
-    platform: nma
-    api_key: !secret notifymyandroid_apikey
+#notify:
+#  - name: johns_notifymyandroid
+#    platform: nma
+#    api_key: !secret notifymyandroid_apikey
 
     #################################
     #                               #
@@ -361,42 +429,41 @@ media_player:
   #  client_id: 615e50e82d1f43ce8b5fd64348b8c6a2
    # client_secret: f118c6f986ab46babddba5d249c22590
     #aliases:
-  - platform: cast
-  - platform: universal
-    name: Test Universal Media Player
-    children:
-      - media_player.volumio
-    commands:
-      turn_on:
-        service: remote.send_command
-        data:
-          entity_id: remote.basementharmonyhub
-          device: 43958047
-          command: PowerOn
-      turn_off:
-        service: remote.send_command
-        data:
-          entity_id: remote.basementharmonyhub
-          device: 43958047
-          command: PowerOff
-      volume_up:
-        service: remote.send_command
-        data:
-          entity_id: remote.basementharmonyhub
-          device: 43958047
-          command: VolumeUp
-      volume_down:
-        service: remote.send_command
-        data:
-          entity_id: remote.basementharmonyhub
-          device: 43958047
-          command: VolumeDown
-      mute:
-        service: remote.send_command
-        data:
-          entity_id: remote.basementharmonyhub
-          device: 43958047
-          command: Mute
+    #- platform: universal
+  #  name: Test Universal Media Player
+  #  children:
+  #    - media_player.volumio
+  #  commands:
+  #    turn_on:
+  #      service: remote.send_command
+  #      data:
+  #        entity_id: remote.basementharmonyhub
+  #        device: 43958047
+  #        command: PowerOn
+  #    turn_off:
+  #      service: remote.send_command
+  #      data:
+  #        entity_id: remote.basementharmonyhub
+  #        device: 43958047
+  #        command: PowerOff
+  #    volume_up:
+  #      service: remote.send_command
+  #      data:
+  #        entity_id: remote.basementharmonyhub
+  #        device: 43958047
+  #        command: VolumeUp
+  #    volume_down:
+  #      service: remote.send_command
+  #      data:
+  #        entity_id: remote.basementharmonyhub
+  #        device: 43958047
+  #        command: VolumeDown
+  #    mute:
+  #      service: remote.send_command
+  #      data:
+  #        entity_id: remote.basementharmonyhub
+  #        device: 43958047
+  #        command: Mute
   - platform: plex
     entity_namespace: 'plex'
     include_non_clients: true
@@ -443,12 +510,12 @@ media_player:
 
 
 device_tracker:
-  - platform: asuswrt
-    host: !secret asus_ip
-    username: !secret router_user
-    password:  !secret router_pass
-    protocol: telnet
-    track_new_devices: no
+#  #- platform: asuswrt
+#    host: !secret asus_ip
+#    username: !secret router_user
+#    password:  !secret router_pass
+#    protocol: telnet
+#    track_new_devices: no
     #ssh_key: /home/homeassistant/.homeassistant/keys/asuswrtopenssh
   #  password: !secret password
  # - platform: icloud
@@ -456,11 +523,11 @@ device_tracker:
    # password: Nitt4agm2c2taotc
     #account_name: Mom
   - platform: gpslogger
-  - platform: tomato
-    host: !secret tomato_ip
-    username: !secret router_user
-    password:  !secret router_pass
-    http_id: !secret tomato_http_id
+#  - platform: tomato
+#    host: !secret tomato_ip
+#    username: admin
+#    password:  !secret router_pass
+#    http_id: !secret tomato_http_id
  # - platform: icloud
   #  username: iamaroadgeek@gmail.com
    # password: JDChurch87

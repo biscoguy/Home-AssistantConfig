@@ -1,0 +1,10 @@
+cover.bay_1__glenyss_garage_door:
+  friendly_name: Bay 1 - Glenys's Garage Door 1
+cover.bay_1__glenyss_garage_door_2:
+  hidden: true
+cover.bay_2__dougs_garage_door: {}
+cover.bay_2__dougs_garage_door_2:
+  hidden: true
+cover.primary_bay__main_garage_door: {}
+cover.primary_bay__main_garage_door_2:
+  hidden: true

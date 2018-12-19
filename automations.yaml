@@ -1,1 +1,178 @@
-[]
+- id: '1540023952962'
+  alias: GlenysGarageDoorOpenTimer
+  trigger:
+  - entity_id: cover.bay_1__glenyss_garage_door
+    from: closed
+    platform: state
+    to: opening
+  - entity_id: cover.bay_1__glenyss_garage_door_2
+    from: closed
+    platform: state
+    to: opening
+  - entity_id: cover.bay_1__glenyss_garage_door_2
+    from: closed
+    platform: state
+    to: open
+  condition: []
+  action:
+  - data:
+      entity_id: timer.glenys
+    service: timer.start
+  - data:
+      message: Glenys's garage door is open
+      notification_id: glenyssgaragedoor
+      title: ATTENTION
+    service: persistent_notification.create
+- id: '1540024912132'
+  alias: GlenysGarageDoorAlert
+  trigger:
+  - event_data:
+      entity_id: timer.glenys
+    event_type: timer.finished
+    platform: event
+  condition:
+  - condition: state
+    entity_id: cover.bay_1__glenyss_garage_door
+    state: open
+  action:
+  - data:
+      message: Glenys's garage door has been open for 15 minutes.
+      title: Garage Door Open Alert
+    service: notify.isgarageopen
+  - data:
+      message: Glenys's garage door has been open for more than 15 minutes.
+      notification_id: glenyssgaragedoor
+      title: ATTENTION - SECURITY ISSUE
+    service: persistent_notification.create
+- id: '1540034234723'
+  alias: DougsGarageDoorTimer
+  trigger:
+  - entity_id: cover.bay_2__dougs_garage_door_2
+    from: closed
+    platform: state
+    to: opening
+  - entity_id: cover.bay_2__dougs_garage_door
+    from: closed
+    platform: state
+    to: open
+  - entity_id: cover.bay_2__dougs_garage_door
+    from: closed
+    platform: state
+    to: opening
+  condition: []
+  action:
+  - data:
+      entity_id: timer.dougs
+    service: timer.start
+  - data:
+      message: Doug's garage door is open
+      notification_id: dougsgaragedoor
+      title: ATTENTION
+    service: persistent_notification.create
+- id: '1540034345407'
+  alias: DougsGarageDoorAlert
+  trigger:
+  - event_data:
+      entity_id: timer.dougs
+    event_type: timer.finished
+    platform: event
+  condition:
+  - condition: state
+    entity_id: cover.bay_2__dougs_garage_door
+    state: open
+  action:
+  - data:
+      message: Doug's garage door has been open for 15 minutes.
+      title: Garage Door Open Alert
+    service: notify.isgarageopen
+  - data:
+      message: Dougs garage door has been open for more than 15 minutes.
+      notification_id: dougsgaragedoor
+      title: ATTENTION - SECURITY ISSUE
+    service: persistent_notification.create
+- id: '1540034416941'
+  alias: MainGarageDoorTimer
+  trigger:
+  - entity_id: cover.primary_bay__main_garage_door
+    from: closed
+    platform: state
+    to: open
+  - entity_id: cover.primary_bay__main_garage_door
+    from: closed
+    platform: state
+    to: opening
+  - entity_id: cover.primary_bay__main_garage_door_2
+    from: closed
+    platform: state
+    to: open
+  condition: []
+  action:
+  - data:
+      entity_id: timer.main
+    service: timer.start
+  - data:
+      message: The main garage door is open
+      notification_id: maingaragedoor
+      title: ATTENTION
+    service: persistent_notification.create
+- id: '1540034634033'
+  alias: MainGarageDoorAlert
+  trigger:
+  - event_data:
+      entity_id: timer.main
+    event_type: timer.finished
+    platform: event
+  condition:
+  - condition: state
+    entity_id: cover.primary_bay__main_garage_door
+    state: open
+  - after: '16:30:00'
+    before: '14:30:00'
+    condition: time
+  action:
+  - data:
+      message: The main garage door has been open for 15 minutes.
+      title: Garage Door Open Alert
+    service: notify.isgarageopen
+  - data:
+      message: The main garage door has been open for more than 15 minutes.
+      notification_id: maingaragedoor
+      title: ATTENTION - SECURITY ISSUE
+    service: persistent_notification.create
+- id: '1540035320259'
+  alias: DougsGarageDoorClearNotification
+  trigger:
+  - entity_id: cover.bay_2__dougs_garage_door
+    from: open
+    platform: state
+    to: closing
+  condition: []
+  action:
+  - alias: ''
+    data:
+      notification_id: dougsgaragedoor
+    service: persistent_notification.dismiss
+- id: '1540035373085'
+  alias: GlenysGarageDoorClearNotification
+  trigger:
+  - entity_id: cover.bay_1__glenyss_garage_door_2
+    from: open
+    platform: state
+    to: closing
+  condition: []
+  action:
+  - data:
+      notification_id: glenyssgaragedoor
+    service: persistent_notification.dismiss
+- id: '1540035411127'
+  alias: MainGarageDoorClearNotification
+  trigger:
+  - entity_id: cover.primary_bay__main_garage_door
+    from: open
+    platform: state
+    to: closing
+  condition: []
+  action:
+  - data:
+      notification_id: maingaragedoor
+    service: persistent_notification.dismiss
